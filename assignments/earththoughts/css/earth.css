@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: white;
+    color: #555555
+    font-family: 'Lato', 'Arial', sans-serif;
+    font-weight: 300px;
+    font-size: 20px;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+
+.earth_photo {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+    text-shadow: 2px 2px 1px #fff
+}
+
+.earth_photo h2 {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%, -50%);
+}
+
+button {
+    margin-top: 5px;
+    width: 15%;
+    font-size: 10px;
+}
+
+h1
+h2,
+h3 {
+    font-weight: 300;
+    text-transform: uppercase;
+}
+
+h3 {
+    font-size: 110%;
+    margin-bottom: 5px;
+    text-align: center;
+}
