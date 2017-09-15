@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Earth Thoughts</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/earth.css">
+  </head>
+
+  <body>
+    <div class=container>
+    <h3>Earth Thoughts</h3>
+    <div class="earth_photo" id="earth_photo"></div>
+    <center><button onclick="reload()" class="btn btn-success" style="cursor:pointer">Get Another</button></center>    
+    </div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    reload();
+  });
+  function reload(){
+    $.getJSON("https://www.reddit.com/r/earthporn/top/.json?count=25", function(data){
+      $('#earth_photo').css('background-image', 'url('+data.data.children[Math.floor((Math.random() * 25) + 1)].data.preview.images[0].resolutions[4].url.replace(/\&amp;/g,'&')+')');
+    });
+    $.getJSON("https://www.reddit.com/r/showerthoughts/top/.json?count=25", function(data){
+      $('#earth_photo').html("<h2>"+data.data.children[Math.floor((Math.random() * 25) + 1)].data.title+"<h2>");
+    });
+  }
+</script>
+
+  </body>
+</html>
