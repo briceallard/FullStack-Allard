@@ -5,8 +5,7 @@
 }
 
 html {
-    background-color: white;
-    color: #555555
+    background-color: #eee;
     font-family: 'Lato', 'Arial', sans-serif;
     font-weight: 300px;
     font-size: 20px;
@@ -19,7 +18,8 @@ html {
     background-size: cover;
     background-position: center;
     height: 80vh;
-    text-shadow: 2px 2px 1px #fff
+    color: #eee;
+    text-shadow: 2px 2px 1px #000
 }
 
 .earth_photo h2 {
