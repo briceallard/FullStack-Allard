@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="http://github.com/briceallard/">
+    <meta name="author" content="Brice Allard">
 
     <title>Earth Thoughts</title>
 
@@ -14,24 +14,36 @@
 
   <body>
     <div class=container>
-    <h3>Earth Thoughts</h3>
-    <div class="earth_photo" id="earth_photo"></div>
-    <center><button onclick="reload()" class="btn btn-success" style="cursor:pointer">Get Another</button></center>    
+      <h3>Earth Thoughts</h3>
+      <div class="earth_photo" id="earth_photo"></div>
+      <center>
+        <button onclick="reload()" class="btn btn-success" style="cursor:pointer">Get Another</button>
+      </center>
     </div>
-<script src="js/jquery-3.2.1.min.js"></script>
-<script type="text/javascript">
-  $(document).ready(function(){
-    reload();
-  });
-  function reload(){
-    $.getJSON("https://www.reddit.com/r/earthporn/top/.json?count=25", function(data){
-      $('#earth_photo').css('background-image', 'url('+data.data.children[Math.floor((Math.random() * 25) + 1)].data.preview.images[0].resolutions[4].url.replace(/\&amp;/g,'&')+')');
-    });
-    $.getJSON("https://www.reddit.com/r/showerthoughts/top/.json?count=25", function(data){
-      $('#earth_photo').html("<h2>"+data.data.children[Math.floor((Math.random() * 25) + 1)].data.title+"<h2>");
-    });
-  }
-</script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
 
+      // on dom ready
+      $(document).ready(function(){
+        // call reload
+        reload();
+      });
+
+      /**
+       *  functionName: reload
+       *  description: Performs an XHR request to reddit's api getting the top posts
+       *  paramenters: n/a
+       *  return: n/a
+      **/
+      function reload(){
+        $.getJSON("https://www.reddit.com/r/earthporn/top/.json?count=25", function(data){
+          $('#earth_photo').css('background-image', 'url('+data.data.children[Math.floor((Math.random() * 25) + 1)].data.preview.images[0].resolutions[4].url.replace(/\&amp;/g,'&')+')');
+        });
+        $.getJSON("https://www.reddit.com/r/showerthoughts/top/.json?count=25", function(data){
+          $('#earth_photo').html("<h2>"+data.data.children[Math.floor((Math.random() * 25) + 1)].data.title+"<h2>");
+        });
+      }
+
+    </script>
   </body>
 </html>
