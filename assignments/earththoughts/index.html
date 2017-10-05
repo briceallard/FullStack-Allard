@@ -22,9 +22,19 @@
     </div>
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript">
+
+      // on dom ready
       $(document).ready(function(){
+        // call reload
         reload();
       });
+
+      /**
+       *  functionName: reload
+       *  description: Performs an XHR request to reddit's api getting the top posts
+       *  paramenters: n/a
+       *  return: n/a
+      **/
       function reload(){
         $.getJSON("https://www.reddit.com/r/earthporn/top/.json?count=25", function(data){
           $('#earth_photo').css('background-image', 'url('+data.data.children[Math.floor((Math.random() * 25) + 1)].data.preview.images[0].resolutions[4].url.replace(/\&amp;/g,'&')+')');
@@ -33,6 +43,7 @@
           $('#earth_photo').html("<h2>"+data.data.children[Math.floor((Math.random() * 25) + 1)].data.title+"<h2>");
         });
       }
+
     </script>
   </body>
 </html>
