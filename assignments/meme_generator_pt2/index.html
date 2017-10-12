@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Meme Generator</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet/less" type="text/css" href="./css/navs.less" />
+
+    <!-- Custom styles for this template -->
+    <link href="./css/cover.css" rel="stylesheet">
+    <style>
+        .steps {
+            text-align: left;
+        }
+
+        .textstyle {
+            width: 400px;
+            height: 80px;
+            border: 3px solid #cccccc;
+            padding: 5px;
+            font-family: Tahoma, sans-serif;
+            /* background-image: url(bg.gif); */
+            background-position: bottom right;
+            background-repeat: no-repeat;
+            color: black;
+        }
+
+        .meme_image {
+            width: 100%;
+            height: 200px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            border: 1px solid grey;
+        }
+
+        .prettyline {
+            height: 5px;
+            border-top: 0;
+            background: #c4e17f;
+            border-radius: 5px;
+            background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="cover-container">
+                <div class="masthead clearfix">
+                    <div class="inner">
+                        <h3 class="masthead-brand">Meme Generator</h3>
+                        <nav class="nav nav-masthead">
+                            <a class="nav-link active" href="#">Home</a>
+                            <a class="nav-link" href="#">Features</a>
+                            <a class="nav-link" href="#">Contact</a>
+                            <a class="nav-link" href="#signup" data-toggle="modal" data-target=".bs-modal-sm">Register</a>
+                            <!-- <button class="btn btn-primary btn-lg" href="#signup" data-toggle="modal" data-target=".bs-modal-sm">Sign In/Register</button> -->
+                        </nav>
+                    </div>
+                </div>
+                <div id="showImage" class="meme_image">
+
+                </div>
+                <div id="textForm">
+                    <form class="steps" onsubmit="event.preventDefault();" id="enterTextForm">
+                        <fieldset>
+                            <div class="form-group">
+                                <label>Step 3 - Enter Text</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="topText">Top Text</label>
+                                <textarea name="topText" id="topText" class="textstyle"></textarea>
+                                <label for="botText">Bottom Text</label>
+                                <textarea name="botText" id="botText" class="textstyle"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Step 4 - Generate</label>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Generate</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+
+                <div class="mastfoot">
+                    <div class="inner">
+                        <p>Cover template for <a href="https://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="container">
+        <hr class="prettyline">
+        <br>
+        <center>
+            <h1><b>Sorry</b></h1>
+            <h3>You need to sign in or register for this service</h3>
+            <em>Donate Dogecoin: DD7StzN1wGQhE4a47uDsBodkS4DE8gxcwh</em>
+            <br>
+            <button class="btn btn-primary btn-lg" href="#signup" data-toggle="modal" data-target=".bs-modal-sm">Sign In/Register</button>
+        </center>
+        <br>
+        <hr class="prettyline">
+    </div>
+
+
+    <!-- Modal -->
+    <!-- https://bootsnipp.com/snippets/featured/sign-in-sign-up-dual-modal -->
+    <div class="modal fade bs-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <br>
+                <div class="bs-example bs-example-tabs">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active"><a href="#signin" data-toggle="tab">Sign In</a></li>
+                        <li class=""><a href="#signup" data-toggle="tab">Register</a></li>
+                        <li class=""><a href="#why" data-toggle="tab">Why?</a></li>
+                    </ul>
+                </div>
+                <div class="modal-body">
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in" id="why">
+                            <p>We need this information so that you can receive access to the site and its content. Rest assured your information will not be sold, traded, or given to anyone.</p>
+                            <p></p><br> Please contact
+                            <a mailto:href="JoeSixPack@Sixpacksrus.com"></a>JoeSixPack@Sixpacksrus.com</a>
+                            for any other inquiries.</p>
+                        </div>
+                        <div class="tab-pane fade active in" id="signin">
+                            <form class="form-horizontal" id="signin">
+                                <fieldset>
+                                    <!-- Sign In Form -->
+                                    <!-- Text input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="loginid">Alias:</label>
+                                        <div class="controls">
+                                            <input required="" id="loginid" name="loginid" type="text" class="form-control" placeholder="JoeSixpack" class="input-medium" required="">
+                                        </div>
+                                    </div>
+
+                                    <!-- Password input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="passwordinput">Password:</label>
+                                        <div class="controls">
+                                            <input required="" id="passwordinput" name="passwordinput" class="form-control" type="password" placeholder="********" class="input-medium">
+                                        </div>
+                                    </div>
+
+                                    <!-- Multiple Checkboxes (inline) -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="rememberme"></label>
+                                        <div class="controls">
+                                            <label class="checkbox inline" for="rememberme-0">
+                      <input type="checkbox" name="rememberme" id="rememberme-0" value="Remember me">
+                      Remember me
+                    </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="signin"></label>
+                                        <div class="controls">
+                                            <button id="signin" name="signin" class="btn btn-success">Sign In</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="signup">
+                            <form class="form-horizontal" onsubmit="event.preventDefault();">
+                                <fieldset>
+                                    <!-- Sign Up Form -->
+                                    <!-- Text input -->
+                                    <div class="control-group">
+                                      <label class="control-label" for="first">First Name:</label>
+                                      <div class="controls">
+                                        <input id="first" name="first" class="form-control" type="text" placeholder="First Name" class="input-large">
+                                      </div>
+                                    </div>
+                                    <!-- Text input -->
+                                    <div class="control-group">
+                                      <label class="control-label" for="last">Last Name:</label>
+                                      <div class="controls">
+                                        <input id="last" name="last" class="form-control" type="text" placeholder="Last Name" class="input-large">
+                                      </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="Email">Email:</label>
+                                        <div class="controls">
+                                            <input id="Email" name="Email" class="form-control" type="text" placeholder="example@example.com" class="input-large">
+                                        </div>
+                                    </div>
+
+                                    <!-- Text input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="userid">Username:</label>
+                                        <div class="controls">
+                                            <input id="userid" name="userid" class="form-control" type="text" placeholder="User Name" class="input-large">
+                                        </div>
+                                    </div>
+
+                                    <!-- Password input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="password">Password:</label>
+                                        <div class="controls">
+                                            <input id="password" name="password" class="form-control" type="password" placeholder="********" class="input-large">
+                                            <em>1-8 Characters</em>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="reenterpassword">Re-Enter Password:</label>
+                                        <div class="controls">
+                                            <input id="reenterpassword" class="form-control" name="reenterpassword" type="password" placeholder="********" class="input-large">
+                                        </div>
+                                    </div>
+
+                                    <!-- Multiple Radios (inline) -->
+                                    <br>
+
+
+                                    <!-- Button -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="confirmsignup"></label>
+                                        <div class="controls">
+                                            <button id="confirmsignup" name="confirmsignup" class="btn btn-success">Sign Up</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <center>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/tether.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>
+        $(function() {
+
+            function live_reload(path) {
+                console.log($('#showImage').css("background-image"))
+                var data = {
+                    'topText': $("#topText").val(),
+                    'botText': $("#botText").val(),
+                    'image_path': path
+                }
+                var settings = {
+                    "data": data,
+                    "async": true,
+                    "crossDomain": false,
+                    "url": "http://localhost:5050/meme_generator/v1.0/generate_image",
+                    "method": "POST",
+                    "headers": {
+                        "cache-control": "no-cache"
+                    }
+                }
+                $.ajax(settings).done(function(response) {
+
+                    $('#showImage').css("background-image", "url(" + response.output_name + ")");
+
+                });
+            }
+
+
+            var image_form = '';
+            image_form += '<form class="steps" onsubmit="event.preventDefault();" id="getImageForm">';
+            image_form += '<fieldset>';
+            image_form += '<div class="form-group">';
+            image_form += '<label for="picurl">Get Your Image</label>';
+            image_form += '<input type="text" id="picurl" class="form-control" placeholder="Url" value="https://imgflip.com/s/meme/One-Does-Not-Simply.jpg">';
+            image_form += '<label for="picName">Name Image</label>';
+            image_form += '<input type="text" id="picName" class="form-control" placeholder="Pic Name">';
+            image_form += '<button type="submit" class="btn btn-primary" id="submitImage">Submit</button>';
+            image_form += '</div>';
+            image_form += '</fieldset>';
+            image_form += '</form>';
+            $('#showImage').html(image_form);
+
+            $('#enterTextForm').hide()
+
+            $("#confirmsignup").click(function() {
+                first = $('#first').val()
+                last = $('#last').val()
+                email = $('#Email').val()
+                userid = $('#userid').val()
+                pass = $('#password').val()
+                repass = $('#reenterpassword').val()
+
+                url = "http://localhost:5050/meme_generator/v1.0/register"
+
+                data = {
+                    "first": first,
+                    "last": last,
+                    "email": email,
+                    "userid": userid,
+                    "pass": pass
+                }
+
+                function register_success(response) {
+                    console.log(response);
+
+                }
+
+                function register_failure(response) {
+                    console.log(response);
+                }
+
+                my_request("POST", url, data, register_success, register_failure);
+
+            });
+
+            $("#submitImage").click(function() {
+                url = $('#picurl').val()
+                name = $('#picName').val()
+
+                console.log(url);
+                console.log(name);
+                url = "http://localhost:5050/meme_generator/v1.0/grab_image?url=" + url + "&" + "fname=" + name
+
+
+                function image_success(response) {
+                    console.log(response);
+                    $('#getImageForm').remove()
+                    $('#enterTextForm').show();
+                    $('#showImage').addClass("meme_image")
+                    $('#showImage').css("background-image", "url(" + response.img_path + ")");
+                    $("#topText").keydown(function() {
+                        live_reload(response.img_path)
+                    });
+                }
+
+                function image_failure(response) {
+                    console.log(response);
+                }
+
+                my_request("GET", url, {}, image_success, image_failure);
+
+            });
+
+            //For use later to create a robust ajax handler
+            function my_request2(type, url, data, successHandler, failureHandler) {
+                var jqxhr = $.ajax({
+                    async: true,
+                    crossDomain: false,
+                    headers: {
+                        "cache-control": "no-cache"
+                    },
+                    url: url,
+                    type: type, // default is GET but you can use other verbs based on your needs.
+                    cache: true, // default is true, but false for dataType 'script' and 'jsonp', so set it on need basis.
+                    data: data, // add your request parameters in the data object.
+                    dataType: "json", // specify the dataType for future reference
+
+                    //jsonp: "callback", // only specify this to match the name of callback parameter your API is expecting for JSONP requests.
+                    // statusCode: { // if you want to handle specific error codes, use the status code mapping settings.
+                    //     404: handler404,
+                    //     500: handler500
+                    // }
+                });
+                jqxhr.done(successHandler);
+                jqxhr.fail(failureHandler);
+            }
+
+            function my_request(method, url, data, successHandler, failureHandler) {
+
+                var jqxhr = $.ajax({
+                    "async": true,
+                    "crossDomain": true,
+                    "url": url,
+                    "method": method,
+                    "headers": {
+                        "cache-control": "no-cache",
+                        "postman-token": "e94cfe4d-dd33-f8e4-11a3-3730a3c25500"
+                    },
+                    "processData": false,
+                    "contentType": false,
+                    "mimeType": "multipart/form-data",
+                    "data": data
+                });
+                jqxhr.done(successHandler);
+                jqxhr.fail(failureHandler);
+
+            }
+
+
+        });
+    </script>
+</body>
+
+</html>
