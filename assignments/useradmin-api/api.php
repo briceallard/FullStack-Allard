@@ -210,6 +210,18 @@ class MyAPI extends API
      */
     protected function add_user()
     {
+        $newId = count($this->mongo->query())+1;
+        $this->mongo->insert([
+            [
+                '_id' => $newId,
+                'first' => $_POST['first'],
+                'last' => $_POST['last'],
+                'email' => $_POST['email'],
+                'age' => $_POST['age'],
+                'nat' => $_POST['nat']
+            ]
+        ]);
+        echo json_encode(["status" => true, "_id" => $newId],JSON_PRETTY_PRINT);
     }
 
     /**
@@ -217,13 +229,23 @@ class MyAPI extends API
      */
     protected function update_user()
     {
+        $this->mongo->update(["_id" => intval($_POST['_id'])],[
+            'first' => $_POST['first'],
+            'last' => $_POST['last'],
+            'email' => $_POST['email'],
+            'age' => $_POST['age'],
+            'nat' => $_POST['nat']
+        ]);
+        echo json_encode(["status" => true],JSON_PRETTY_PRINT);
     }
-
+    
     /**
      *delete_user: removes a user(s) from the collection
      */
     protected function delete_user()
     {
+        $this->mongo->delete([["_id" => intval($_POST['_id'])]]);
+        echo json_encode(["status" => true, "_id" => $_POST['_id']],JSON_PRETTY_PRINT);
     }
 
 
