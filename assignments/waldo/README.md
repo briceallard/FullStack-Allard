@@ -1,1 +1,1 @@
-https://blackrockdigital.github.io/startbootstrap-the-big-picture/
+Waldo project for Internet Programming class
