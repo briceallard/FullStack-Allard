@@ -19,9 +19,9 @@ class mongoHelper{
         $this->dbdotcoll = $this->mdb.'.'.$this->collection;
         $this->manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
         $this->writeConcern = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
-        
+
     }
-    
+
     /**
      * setMdb - Sets the database to work with
      *
@@ -35,7 +35,7 @@ class mongoHelper{
         $this->mdb = $mdb;
         $this->dbdotcoll = $this->mdb.'.'.$this->collection;
     }
-    
+
     /**
      * setDbcoll - Sets the collection to work with
      *
@@ -49,7 +49,7 @@ class mongoHelper{
         $this->collection = $collection;
         $this->dbdotcoll = $this->mdb.'.'.$this->collection;
     }
-    
+
     /**
      * insert - Inserts 1 or more documents into mongodb
      *
@@ -74,13 +74,13 @@ class mongoHelper{
             }
             $_ids[] = $bulk->insert($doc);
         }
-        
+
         $result = $this->manager->executeBulkWrite($this->dbdotcoll, $bulk, $this->writeConcern);
-        
+
         return $_ids;
-        
+
     }
-    
+
     /**
      * update - Updates 1 document in mongodb
      *
@@ -97,33 +97,33 @@ class mongoHelper{
         }
         $_ids = [];
         $bulk = new MongoDB\Driver\BulkWrite;
-        
+
         if(!$params){
             $params = ['multi' => false, 'upsert' => false];
         }
-        
+
         $bulk->update(
             $filter,
             ['$set' => $set],
             $params
         );
         $result = $this->manager->executeBulkWrite($this->dbdotcoll, $bulk, $this->writeConcern);
-        
+
         return $result;
-        
+
     }
-    
+
     /**
      * query - query's the database
      *
      * @params:
      *    $filter     array : associative array of key value pairs to match for selection
      *                        (filter disqualifies documents from the result)
-     *    $projection array : associative array of keys to remove or add to result 
+     *    $projection array : associative array of keys to remove or add to result
      *                        (projection removes portions of the result)
      * @returns:
      *     results array : array of document that got selected
-     * 
+     *
      * @example:
      *      $docs = $mymongo->query(["category"=>"Laptop"],["_id"=>0,"price"=>1]);
      *      // this finds all docs where category == laptop and only returns the prices
@@ -133,20 +133,20 @@ class mongoHelper{
             return ["error"=>"db or collection not set."];
         }
         $results = [];
-                
+
         if(array_key_exists('_id',$filter) && strlen($filter['_id']) >= 24){
             $filter['_id'] = new MongoDB\BSON\ObjectID($filter['_id']);
         }
-        
+
         $query = new MongoDB\Driver\Query($filter, $options);
         $cursor = $this->manager->executeQuery($this->dbdotcoll, $query);
-        
-        foreach ($cursor as $document) { 
+
+        foreach ($cursor as $document) {
             $results[] = $document;
         }
         return $results;
     }
-    
+
     /**
      * delete - delete's items from the database
      *
@@ -170,24 +170,24 @@ class mongoHelper{
                 if(!$this->isAssoc($doc)){
                     return array("error"=>"DELETE failed, document not associative array.");
                 }
-                //If the '_id' is in array and its long (like a mongo id) 
+                //If the '_id' is in array and its long (like a mongo id)
                 //then convert into a mongoid object
                 if(array_key_exists('_id',$doc) && strlen($doc['_id']) >= 24){
                     $doc['_id'] = new MongoDB\BSON\ObjectID($doc['_id']);
                 }
-                
+
                 //run the delete
                 $bulk->delete($doc);
             }
         }else{
             $bulk->delete([]);
         }
-        
+
         $result = $this->manager->executeBulkWrite($this->dbdotcoll, $bulk, $this->writeConcern);
         return $result->getDeletedCount();
 
     }
-    
+
     /**
      * delete - Supposed to get a max id from collection
      *
@@ -197,7 +197,7 @@ class mongoHelper{
      *    $field   string : field
      *
      * @returns:
-     *     max        int : max id 
+     *     max        int : max id
      *
      */
     function get_max_id($mdb,$coll,$field){
@@ -205,10 +205,10 @@ class mongoHelper{
         $prevcollection = $this->collection;
 
         $max_log = new thelog();
-        
+
      	$this->setMdb($mdb);		//set db
      	$this->setDbcoll($coll);    //set collection
-         
+
         $check = $this->query();	//run query
 
         // total hack !!!!!
@@ -230,22 +230,22 @@ class mongoHelper{
         }else{
             $max = 0;
         }
-        											
+
      	$this->setMdb($prevmdb);			  //re-set db
      	$this->setDbcoll($prevcollection);    //re-set collection
-											
+
 		return 	$max;
     }
-    
+
     private function isAssoc(array $arr){
         if (array() === $arr) return false;
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
-    
+
     private function db_coll_set(){
         return $this->mdb != null && $this->collection != null;
     }
-    
+
 }
 
 class thelog{
@@ -273,7 +273,7 @@ if($argv[1] == 'run_mongo_tests'){
         [ "pid"=>4, "product_name"=>"Apple IPAD", "price"=>"$400", "category"=>"Tablet" ],
         [ "pid"=>5, "product_name"=>"MacBook Pro", "price"=>"$800", "category"=>"Laptop"],
         [ "pid"=>6, "product_name"=>"Dell Laptop", "price"=>"$620", "category"=>"Laptop"],
-        ["pid"=>7, "product_name"=>"Canon EOS 700D DSLR Camera", "price"=>"$400", "category"=>"Camera"], 
+        ["pid"=>7, "product_name"=>"Canon EOS 700D DSLR Camera", "price"=>"$400", "category"=>"Camera"],
         ["pid"=>8, "product_name"=>"Nikon D7100 DSLR Camera ", "price"=>"$440", "category"=>"Camera"],
         ["pid"=>9, "product_name"=>"HTC Phone", "price"=>"$200", "category"=>"Mobile Phone"],
         ["pid"=>10, "product_name"=>"LG Monitor", "price"=>"$500", "category"=>"Electronics"],
@@ -281,17 +281,17 @@ if($argv[1] == 'run_mongo_tests'){
         [ "pid"=>12, "product_name"=>"Samsung Gear Live Black - Made for Android", "price"=>"$250", "category"=>"Watch"],
         [ "pid"=>13, "product_name"=>"Apple Watch", "price"=>"$380", "category"=>"Watch"],
         [ "pid"=>14, "product_name"=>"lenovo Laptop", "price"=>"$420", "category"=>"Laptop"],
-        [ "pid"=>15, "product_name"=>"joes Laptop", "price"=>"$920", "category"=>"Laptop"] 
+        [ "pid"=>15, "product_name"=>"joes Laptop", "price"=>"$920", "category"=>"Laptop"]
         ];
 
     $mymongo = new mongoHelper('onlinestore','products'); // connect to db and collection
     $mymongo->delete();                         // delete all products from the collection
-    
+
     $ids = $mymongo->insert($products);         // insert array of products
-    
+
     $mymongo->delete([['pid'=>9]]);             // delete product with id == 9
     $mymongo->delete([['price' => '$420']]);    // delete product with price == '420'
-    
+
     //query(filter_array,projection_array);
     //filter = key value pairs to match items in the db
     //project = key value pairs of what to return in the result array
@@ -299,12 +299,12 @@ if($argv[1] == 'run_mongo_tests'){
     //The pid is always in the result unless you explicitly exclude it like below.
     $docs = $mymongo->query(["category"=>"Laptop"],["_id"=>0,"price"=>1]);
     print_r($docs);
-    
+
     //update($filter,$new_values)
     //This update finds the product with id==15 and updates its product name
     //    from joes laptop to bobs laptop
     $res = $mymongo->update(["pid"=>15],["product_name"=>"bobs Laptop"]);
-    
+
     //This returns all items from db.collection
     $docs = $mymongo->query();
     print_r($docs);
@@ -326,7 +326,3 @@ if($argv[1] == 'run_mongo_tests'){
 	$max = $mymongo->get_max_id('memes','users','uid');
 	print_r($max);
 }
-
-
-
-

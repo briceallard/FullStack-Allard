@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -25,12 +26,12 @@
             -o-background-size: cover; */
             /* background-size: contain; */
         }
-        
+
         #thumb {
             width: 1024px;
             height: 800px;
         }
-        
+
         .mycenter {
             margin-left: auto;
             margin-right: auto;
@@ -44,19 +45,22 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
         <div class="container">
-            <a class="navbar-brand" href="#">Start Bootstrap</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home
+                        <a class="nav-link" href="https://bricewa.me/fullstack">Home
                 <span class="sr-only">(current)</span>
               </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="startTimer">Start Timer</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="generate">Generate waldo</a>
                     </li>
                 </ul>
             </div>
@@ -70,7 +74,8 @@
         <div class="row">
             <div class="col"></div>
             <div class="col-12 col-md-auto mycenter">
-                <img src="./images/crowd.jpg" id="thumb">
+                <!-- pick a random number from game_images -->
+                <img src="https://bricewa.me/fullstack/waldo/api/?img" id="thumb">
             </div>
             <div class="col col-lg-2"></div>
         </div>
@@ -89,71 +94,95 @@
     <script src="./js/Magnifier.js"></script>
     <script>
 
-        $(".mycenter").click(function(evt) {
-            console.log(evt);
+        $("#generate").click(function(){
+          $.get("https://bricewa.me/fullstack/waldo/api/?generate", function(){
+            alert("A new waldo game has been generated.\nRefresh for a new game.");
+          });
         });
-        
+
         $("#startTimer").click(function(){
-        blur($("#thumb"),0);
-        var evt = new Event();
-        var m = new Magnifier(evt);
+          blur($("#thumb"),0);
+          var evt = new Event();
+          var m = new Magnifier(evt);
 
-        m.attach({
-            thumb: '#thumb',
-            large: 'http://griffincomplaints.xyz/waldo/images/crowd.jpg',
-            mode: 'inside',
-            zoom: 3,
-            zoomable: true
+          // m.attach({
+          //     thumb: '#thumb',
+          //     large: 'https://bricewa.me/fullstack/waldo/api/api-v2.php?img',
+          //     mode: 'inside',
+          //     zoom: 2,
+          //     zoomable: false
+          // });
+          var now = new Date();
+          var end = new Date(now.getTime() + 300000); // 5 minutes from now
+          // var end = new Date(now.getTime() + 1500); // 5 seconds from now
+
+        	var _second = 1000;
+        	var _minute = _second * 60;
+        	var _hour = _minute * 60;
+        	var _day = _hour *24;
+        	var timer;
+
+        	function showRemaining()
+        	{
+        	    var now = new Date();
+        	    var distance = end - now;
+
+        	    var days = Math.floor(distance / _day);
+        	    var hours = Math.floor( (distance % _day ) / _hour );
+        	    var minutes = Math.floor( (distance % _hour) / _minute );
+        	    var seconds = Math.floor( (distance % _minute) / _second );
+        	    var milliseconds = Math.round(distance % _second);
+
+        	    var countdownElement = document.getElementById('timer');
+        	    countdownElement.innerHTML = minutes + ':' +
+        		                         seconds + ':' +
+        		                         milliseconds;
+
+              if (distance < 0 ) {
+         	       // handle expiry here..
+         	       clearInterval( timer ); // stop the timer from continuing ..
+         	       alert("You lost!"); // alert a message that the timer has expired..
+                 blur($("#thumb"),20);
+         	    }
+        	}
+
+        	timer = setInterval(showRemaining, 1);
+
+          $("#thumb").click(function(evt) {
+              // calculate
+              $.get("https://bricewa.me/fullstack/waldo/api/?x="+evt.offsetX+"&y="+evt.offsetY+"&gid="+$("#thumb").data("game_id"), function(response){
+                console.log(response);
+                if(response <= 75){
+                  alert("gg");
+                  clearInterval(timer);
+                }
+              });
+          });
         });
-            var now = new Date();
-        var end = new Date(now.getTime() + 300000); // 5 minutes from now
 
-	var _second = 1000;
-	var _minute = _second * 60;
-	var _hour = _minute * 60;
-	var _day = _hour *24;
-	var timer;
-
-	function showRemaining()
-	{
-	    var now = new Date();
-	    var distance = end - now;
-	    if (distance < 0 ) {
-	       // handle expiry here..
-	       clearInterval( timer ); // stop the timer from continuing ..
-	       //alert('Expired'); // alert a message that the timer has expired..
-	    }
-	    var days = Math.floor(distance / _day);
-	    var hours = Math.floor( (distance % _day ) / _hour );
-	    var minutes = Math.floor( (distance % _hour) / _minute );
-	    var seconds = Math.floor( (distance % _minute) / _second );
-	    var milliseconds = Math.round(distance % _second);
-
-	    var countdownElement = document.getElementById('timer');
-	    countdownElement.innerHTML = minutes + ':' +
-		                         seconds + ':' +
-		                         milliseconds;
-	}
-
-	timer = setInterval(showRemaining, 1);
-        });
-        
         function blur(elem,x){
-	    var filterVal = 'blur('+x+'px)';
+      	    var filterVal = 'blur('+x+'px)';
 
-		elem.css('filter', filterVal)
-		.css('webkitFilter', filterVal)
-		.css('mozFilter', filterVal)
-		.css('oFilter', filterVal)
-		.css('msFilter', filterVal);
-	}
-	
-	$(document).ready(function(){
-		blur($("#thumb"),20);
-	});
-        
+      		elem.css('filter', filterVal)
+      		.css('webkitFilter', filterVal)
+      		.css('mozFilter', filterVal)
+      		.css('oFilter', filterVal)
+      		.css('msFilter', filterVal);
+      	}
+
+      	$(document).ready(function(){
+
+      		blur($("#thumb"),20);
+
+          $.get("https://bricewa.me/fullstack/waldo/api/?img", function(response){
+            $("#thumb").attr("src", "./game_images/"+response+".png");
+            $("#thumb").data("game_id", response);
+          });
+
+      	});
+
         /*function startTimer(){
-	    
+
             setInterval({
                 $("#timer").html(03 + ":" + 00 + ":" + 00);
             },1);

@@ -37,16 +37,16 @@ class ImageHelper
      */
     function place_waldo($base_image, $waldo, $width, $height, $x = 0, $y = 0, $new_name = null, $path = null)
     {
-        
+
         // Turn it into a GD resource if necessary.
         $base_image = $this->to_resource($base_image);
 
         // $waldo = $this->clone_img_resource($waldo);
         // var_dump($waldo);
 
-        imagesavealpha($waldo, false);
-        imagealphablending($waldo, false);
-        imagecopy($base_image, $waldo, $x, $y, 0, 0, $width, $height);
+        var_dump(imagesavealpha($waldo, false));
+        var_dump(imagealphablending($waldo, false));
+        var_dump(imagecopy($base_image, $waldo, $x, $y, 0, 0, $width, $height));
         if ($new_name) {
             $success = $this->save_image($base_image, $path, $new_name);
         }
@@ -127,7 +127,7 @@ class ImageHelper
 
         // Turn it into a GD resource if necessary.
         $img = $this->to_resource($in_file);
-        
+
         // allocate a GD color resource with the RGB passed in via $color.
         $removeColour = imagecolorallocate($img, (int)$color[0], (int)$color[1], (int)$color[2]);
 
@@ -147,7 +147,7 @@ class ImageHelper
         if ($new_name) {
             $this->save_image($img, $path, $new_name);
         }
-        
+
         return $img;
     }
 
@@ -183,7 +183,7 @@ class ImageHelper
 
     public function clone_img_resource($img)
     {
-        
+
         //Get width from image.
         $w = imagesx($img);
 
@@ -192,7 +192,7 @@ class ImageHelper
 
         //Get the transparent color from a 256 palette image.
         $trans = imagecolortransparent($img);
-        
+
           //If this is a true color image...
         if (imageistruecolor($img)) {
             $clone = imagecreatetruecolor($w, $h);
@@ -201,17 +201,17 @@ class ImageHelper
         } //If this is a 256 color palette image...
         else {
             $clone = imagecreate($w, $h);
-        
+
             //If the image has transparency...
             if ($trans >= 0) {
                 $rgb = imagecolorsforindex($img, $trans);
-        
+
                 imagesavealpha($clone, true);
                 $trans_index = imagecolorallocatealpha($clone, $rgb['red'], $rgb['green'], $rgb['blue'], $rgb['alpha']);
                 imagefill($clone, 0, 0, $trans_index);
             }
         }
-        
+
           //Create the Clone!!
           imagecopy($clone, $img, 0, 0, 0, 0, $w, $h);
           var_dump($clone);
@@ -280,6 +280,7 @@ class ImageHelper
         } else {
             $path = $this->fix_path($path);
         }
+
         imagepng($img, "{$path}{$name}.{$ext}");
         return file_exists("{$path}{$name}.{$ext}");
     }
@@ -311,56 +312,76 @@ class ImageHelper
 }
 
 if ($argv[1] == 'run_image_tests') {
-    echo"Running tests...\n";
+echo"Running tests...\n";
+  $mdb = 'waldoGame';
+  $mh = new mongoHelper($mdb,'users');
 
-    // Create instance of our image helper
-    $waldoGame = new ImageHelper();
+  $game_id = (string)time();
+  $waldo_height = 28;
+  $waldo_width = 12;
+  // Create instance of our image helper
+  $waldoGame = new ImageHelper();
+  // example resizing a waldo image
+  $waldoImg = $waldoGame->resize_waldo('waldo_stand_wave_254x500.png', $waldo_width, $waldo_height);
+  list($base_width,$base_height,$null1,$null2) = getimagesize('/var/www/html/waldo/images/crowd.jpg');
 
-    // open up the camping image and make the white background transparent (not awesome)
-    $waldoGame->make_transparent('/var/www/html/waldo/waldo_images/waldo_camping_537x429.jpg', [0,0,0], 'camping_transparent.png', '/var/www/html/waldo/scripts/test_output');
+  $rx = rand(0,$base_width);
+  $ry = rand(0,$base_height);
+  $data = ['x'=>$rx,'y'=>$ry,'game_id'=>$game_id,'image_path'=>'/var/www/html/waldo/game_images','img_type'=>'png', 'bbox' =>[$rx,$ry,$rx+$waldo_width,$ry+$waldo_height] ];
+  // put a single waldo on another image
+  $waldoGame->place_waldo('/var/www/html/waldo/images/crowd.jpg', $waldoImg, $waldo_width, $waldo_height, $rx, $ry, $game_id.'.png', '/var/www/html/waldo/game_images');
 
-    // example resizing a waldo image
-    $waldoImg = $waldoGame->resize_waldo('waldo_walking_200x451.png', 16, 32, 'waldo_resized', '/var/www/html/waldo/scripts/test_output');
-
-    // put a single waldo on another image
-    $waldoGame->place_waldo('/var/www/html/waldo/images/crowd.jpg', $waldoImg, 16, 32, 100, 100, 'single_waldo_on_background', '/var/www/html/waldo/scripts/test_output');
-
-    // initialize some vars
-    $waldo_width = 17;
-    $waldo_height = 35;
-
-    //need size of base image so we can generate random locations
-    list($base_width,$base_height,$null1,$null2) = getimagesize('/var/www/html/waldo/images/crowd.jpg');
-
-    //get a waldo image resource without saving it to a file
-    $waldoImg = $waldoGame->resize_waldo('waldo_walking_200x451.png', $waldo_width, $waldo_height);
-
-    // path to image where we will place our waldos
-    $base = '/var/www/html/waldo/images/crowd.jpg';
-    $max = 2;
-    $name = "{$max}_waldos";
-
-    //array of waldo resources
-    $waldos = [];
-
-    // load array with copies of waldo and flip half of them
-    for ($i=0; $i<$max; $i++) {
-        $waldos[$i] = $waldoGame->clone_img_resource($waldoImg);
-        if ($i % 2 == 0) {
-            imageflip($waldos[$i], IMG_FLIP_HORIZONTAL);
-        }
-    }
-
-    // put our waldos on the base image
-    for ($i=0; $i<$max; $i++) {
-        $rx = rand(0, $base_width);
-        $ry = rand(0, $base_height);
-        echo"Putting another waldo at x:{$rx} y:{$ry}\n";
-        $base = $waldoGame->place_waldo($base, $waldos[$i], $waldo_width,$waldo_height, $rx, $ry);
-
-    }
-
-    // save the base image with all the waldos on it
-    $waldoGame->save_image($base, '/var/www/html/waldo/scripts/test_output', $name);
-    $waldoGame->color_waldo('waldo_camping_537x429.jpg',[214,24,52],[14,66,115],'waldo_camping_blue_537x429.jpg', '/var/www/html/waldo/waldo_images/');
+  $mh->insert([$data]);
+    // echo"Running tests...\n";
+    //
+    // // Create instance of our image helper
+    // $waldoGame = new ImageHelper();
+    //
+    // // open up the camping image and make the white background transparent (not awesome)
+    // $waldoGame->make_transparent('/var/www/html/waldo/waldo_images/waldo_camping_537x429.jpg', [0,0,0], 'camping_transparent.png', '/var/www/html/waldo/scripts/test_output');
+    //
+    // // example resizing a waldo image
+    // $waldoImg = $waldoGame->resize_waldo('waldo_walking_200x451.png', 16, 32, 'waldo_resized', '/var/www/html/waldo/scripts/test_output');
+    //
+    // // put a single waldo on another image
+    // $waldoGame->place_waldo('/var/www/html/waldo/images/crowd.jpg', $waldoImg, 16, 32, 100, 100, 'single_waldo_on_background', '/var/www/html/waldo/scripts/test_output');
+    //
+    // // initialize some vars
+    // $waldo_width = 17;
+    // $waldo_height = 35;
+    //
+    // //need size of base image so we can generate random locations
+    // list($base_width,$base_height,$null1,$null2) = getimagesize('/var/www/html/waldo/images/crowd.jpg');
+    //
+    // //get a waldo image resource without saving it to a file
+    // $waldoImg = $waldoGame->resize_waldo('waldo_walking_200x451.png', $waldo_width, $waldo_height);
+    //
+    // // path to image where we will place our waldos
+    // $base = '/var/www/html/waldo/images/crowd.jpg';
+    // $max = 2;
+    // $name = "{$max}_waldos";
+    //
+    // //array of waldo resources
+    // $waldos = [];
+    //
+    // // load array with copies of waldo and flip half of them
+    // for ($i=0; $i<$max; $i++) {
+    //     $waldos[$i] = $waldoGame->clone_img_resource($waldoImg);
+    //     if ($i % 2 == 0) {
+    //         imageflip($waldos[$i], IMG_FLIP_HORIZONTAL);
+    //     }
+    // }
+    //
+    // // put our waldos on the base image
+    // for ($i=0; $i<$max; $i++) {
+    //     $rx = rand(0, $base_width);
+    //     $ry = rand(0, $base_height);
+    //     echo"Putting another waldo at x:{$rx} y:{$ry}\n";
+    //     $base = $waldoGame->place_waldo($base, $waldos[$i], $waldo_width,$waldo_height, $rx, $ry);
+    //
+    // }
+    //
+    // // save the base image with all the waldos on it
+    // $waldoGame->save_image($base, '/var/www/html/waldo/scripts/test_output', $name);
+    // $waldoGame->color_waldo('waldo_camping_537x429.jpg',[214,24,52],[14,66,115],'waldo_camping_blue_537x429.jpg', '/var/www/html/waldo/waldo_images/');
 }
