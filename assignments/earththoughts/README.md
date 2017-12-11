@@ -1,3 +1,1 @@
-# Earth Thoughts
-
-A combination of /r/showerthoughts and /r/earthporn.
+https://bricewa.me/fullstack/earth/
