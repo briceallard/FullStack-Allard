@@ -1,142 +1,276 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <title>User Admin</title>
 
-    <title>Api Test</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-    <link rel="icon" href="images/favicon.png">
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.css">
+  <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 
 <body>
-    <div>
-        <table id="example" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>Phone</th>
-                    <th>Nat</th>
-                    <th>Location</th>
-                    <th>DOB</th>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
 
-            <tfoot>
-                <tr>
-                    <th>First</th>
-                    <th>Last</th>
-                    <th>Phone</th>
-                    <th>Nat</th>
-                    <th>Location</th>
-                    <th>DOB</th>
-                    <th>Email</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Admin</th>
-                </tr>
-            </tfoot>
-        </table>
+  <div class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">User Admin</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" id="toggleAddUser" href="#" data-toggle="modal" data-target="#addUser">Add user</a>
+          <a class="nav-item nav-link" id="randomize" href="#">Randomize</a>
+        </div>
+      </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="js/scripts.js"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script>
-        //table.row( '#myRowId' ).data( myUpdateObjectOrArray );
-        //table.draw();
-        //var data = table.rows( { selected: true } ).data()[0];
-        //data.DT_RowId gives the required ID.
+  </div>
 
-        function delete_users() {
-            $.ajax({
-                url: "http://griffincomplaints.xyz/api.php/user/",
-                type: 'DELETE',
-                success: function(data) {
-                    console.log(data);
-                    html = '<div>' + data + '</div>';
-                    $('body').append(html);
-                },
-                data: []
+  <div class="container">
+    <table id="datatable" class="table table-hovered"></table>
+  </div>
+
+  <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addUser" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Add user</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" id="createUser">
+          <div class="modal-body">
+            <input type="hidden" name="__method" value="PUT">
+            <div class="row">
+              <div class="col s6">
+                <div class="form-group">
+                  <input type="text" name="first" class="form-control" placeholder="First name">
+                </div>
+              </div>
+              <div class="col s6">
+                <div class="form-group">
+                  <input type="text" name="last" class="form-control" placeholder="Last name">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="email" name="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input type="text" name="age" class="form-control" placeholder="Age">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" id="addUserBtn" class="btn btn-primary">Add user</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUser" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit user</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" id="updateUser">
+          <input type="hidden" name="__method" value="PATCH">
+          <input type="hidden" name="_id" value="">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col s6">
+                <div class="form-group">
+                  <input type="text" name="first" class="form-control" placeholder="First name">
+                </div>
+              </div>
+              <div class="col s6">
+                <div class="form-group">
+                  <input type="text" name="last" class="form-control" placeholder="Last name">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <input type="email" name="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input type="text" name="age" class="form-control" placeholder="Age">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="promptDelete" type="button" class="btn btn-danger" tabindex="0">
+              <div class="visible content">Delete</div>
+              <div class="hidden content">
+                <i class="trash icon"></i>
+              </div>
+            </button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" id="addUserBtn" class="btn btn-success">Edit user</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteUser" data-mid="" tabindex="-1" role="dialog" aria-labelledby="editUser" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Delete user</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <button type="button" id="confirmDelete" class="btn btn-success">Yes</button>
+        <button type="button" id="denyDelete" class="btn btn-danger">No</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="//code.jquery.com/jquery-3.2.1.min.js" charset="utf-8"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.2/umd/popper.min.js" charset="utf-8"></script>
+  <script src="//cdn.datatables.net/v/bs4/dt-1.10.16/datatables.min.js" charset="utf-8"></script>
+  <script src="./assets/js/bootstrap.min.js" charset="utf-8"></script>
+
+  <script type="text/javascript">
+    function checkVals(arr,modal){
+      let hasVal = true;
+      $.each(arr, function(k,v){
+        if(v[1] == ""){
+          hasVal = false;
+        }
+      });
+
+      return hasVal;
+    }
+    function getParams(str){
+      let arr = new Array();
+      $.each(str.split("&"), function(k,v){
+        arr.push(v.split("="));
+      });
+      return arr;
+    }
+    $(document).ready(function(){
+      var datatable = $("#datatable").DataTable({
+        ajax: "./inc/api.php",
+        columns: [
+          { "title": "MID", "data": "_id" },
+          { "title": "First name", "data": "first" },
+          { "title": "Last name", "data": "last" },
+          { "title": "Email", "data": "email" },
+          { "title": "Age", "data": "age" }
+        ],
+        columnDefs: [
+          {
+            "targets": [ 0 ],
+            "visible": false
+          }
+        ],
+        order: [
+          [ 1, "asc" ]
+        ]
+      });
+
+      $("#toggleAddUser").click(function(){
+        $("#addUser").modal('toggle');
+      });
+      $("#createUser").submit(function(e){
+        e.preventDefault();
+
+        let params = $("#createUser").serialize();
+        let paramArr = getParams(params);
+        paramArr.shift(); // since paramArr[0] is the pseudo method
+
+        if(checkVals(paramArr,1)){
+          // console.log("asdasd");
+          // var posting = $.post("./inc/actions.php", params);
+          var posting;
+          console.log(posting = $.post("./inc/actions.php", params));
+          // console.log(params);
+          posting.done(function(response){
+            console.log("posted");
+            datatable.row.add({
+              _id: response._id,
+              first: decodeURIComponent(paramArr[0][1]),
+              last: decodeURIComponent(paramArr[1][1]),
+              email: decodeURIComponent(paramArr[2][1]),
+              age: decodeURIComponent(paramArr[3][1])
+            }).draw(false);
+            $.each(paramArr, function(k,v){
+              $("#createUser").find("[name="+v[0]+"]").val("");
             });
+            $("#addUser").modal('toggle');
+          });
+        }
+      });
+
+      $("#randomize").click(function(){
+        // send post to delete whole collection
+        $.post("./inc/actions.php", {__method:"DELETE"});
+        // get new collection
+        datatable.ajax.reload();
+      });
+
+      $("#datatable tbody").on('click', 'tr', function(){
+        var data = datatable.row($(this)).data();
+        // toggle edit user modal
+        $("#editUser").modal("show");
+
+        $.each(data, function(k,v){
+          $("#updateUser").find("[name="+k+"]").val(v);
+        });
+        // give delete option an id
+        $("#deleteUser").data("mid",data["_id"]);
+      });
+
+      $("#updateUser").submit(function(e){
+        e.preventDefault();
+
+
+        var params = $("#updateUser").serialize();
+        var paramArr = getParams(params);
+        paramArr.shift(); // __method
+
+        if(checkVals(paramArr,2)){
+
+          $.post("./inc/actions.php", params, function(response){
+            console.log(response);
+            $("#editUser").modal('toggle');
+            datatable.ajax.reload();
+          });
+
         }
 
-        function get_users() {
-            $.ajax({
-                url: "http://griffincomplaints.xyz/api.php/user/",
-                type: 'GET',
-                success: function(data) {
-                    load_data_tables(data);
-                },
-                data: []
-            });
-        }
+      });
 
-        function load_data_tables(data) {
-            var filtered = [];
-            var newobj = {
-                "data": []
-            };
-            for (let i = 0; i < data.length; i++) {
-                temp = [
-                    data[i].name.first,
-                    data[i].name.last,
-                    data[i].phone,
-                    data[i].nat,
-                    data[i].location.city,
-                    data[i].dob,
-                    data[i].email,
-                    data[i].login.username,
-                    data[i].login.password,
-                    '<i class="fa fa-pencil-square-o edit_user" aria-hidden="true" data-id="' + data[i]['_id'] + '"></i> <i class="fa fa-trash delete_user" aria-hidden="true" data-id="' + data[i]['_id'] + '"></i>'
-                ];
-                newobj["data"].push(temp);
+      $("#promptDelete").click(function(){
+        $("#deleteUser").modal('toggle');
+        $("#confirmDelete").click(function(){
+          $.ajax({
+            type: "POST",
+            url: "./inc/actions.php",
+            data: "_id="+$("#deleteUser").data("mid")+"&__method=DELETE",
+            success: function(response){
+              $("#denyDelete").click();
+              datatable.ajax.reload();
             }
-            console.log(JSON.stringify(newobj));
+          })
+        });
+        $("#denyDelete").click(function(){
+          $("#editUser").modal('toggle');
+          $("#deleteUser").modal('toggle');
+        });
+      });
+    });
+  </script>
 
-            var table = $('#example').DataTable({
-                "data": newobj.data,
-                "initComplete": function(settings, json) {
-                    console.log('DataTables has finished its initialisation.');
-                    add_admin_events();
-                    $('#example tbody').on('click', 'tr', function() {
-                        $(this).toggleClass('selected');
-                        console.log(table.row(this).data());
-
-                    });
-
-                }
-            });
-
-            table.on('draw', function() {
-                console.log('Table redrawn');
-                add_admin_events();
-            });
-
-        }
-
-        function add_admin_events() {
-            $('.delete_user').click(function() {
-                var $this = $(this);
-                console.log($this);
-                console.log($this.data());
-            });
-            $('.edit_user').click(function() {
-                var $this = $(this);
-                console.log($this);
-                console.log($this.data());
-            });
-        }
-
-        get_users();
-    </script>
 </body>
 
 </html>
